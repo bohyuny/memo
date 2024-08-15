@@ -12,21 +12,36 @@ async function editMemo(event) {
       content: editInput,
     }),
   });
+  readMemo();
+}
+
+async function deleteMemo(event) {
+  const id = event.target.dataset.id;
+  const res = await fetch(`/memos/${id}`, {
+    method: "DELETE",
+  });
+  readMemo();
 }
 
 function displayMemo(memo) {
   const ul = document.querySelector("#memo-ul");
 
   const li = document.createElement("li");
-  li.innerText = `[id:${memo.id}] ${memo.content}`;
+  li.innerText = `${memo.content}`;
 
   const editBtn = document.createElement("button");
   editBtn.innerText = "수정하기";
   editBtn.addEventListener("click", editMemo);
   editBtn.dataset.id = memo.id;
 
-  ul.appendChild(li);
+  const delBtn = document.createElement("button");
+  delBtn.innerHTML = "삭제";
+  delBtn.addEventListener("click", deleteMemo);
+  delBtn.dataset.id = memo.id;
+
   li.appendChild(editBtn);
+  li.appendChild(delBtn);
+  ul.appendChild(li);
 }
 
 async function readMemo() {
